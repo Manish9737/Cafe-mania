@@ -1,0 +1,122 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+}
+
+/* .container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+} */
+
+#InvoiceGen h1,
+#InvoiceGen h2,
+#InvoiceGen h3 {
+  text-align: center;
+}
+
+#InvoiceGen .form-group {
+  margin-bottom: 10px;
+}
+
+#InvoiceGen .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#InvoiceGen .form-group input[type="text"],
+#InvoiceGen .form-group input[type="number"],
+#InvoiceGen .form-group textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#InvoiceGen .form-group textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+#InvoiceGen .button-group {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#InvoiceGen .button-group button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+#InvoiceGen .button-group button:hover {
+  background-color: #0056b3;
+}
+
+#InvoiceGen .invoice {
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#InvoiceGen .invoice h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#InvoiceGen .invoice p {
+  margin: 5px 0;
+}
+
+#InvoiceGen .invoice table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#InvoiceGen .invoice th,
+#InvoiceGen .invoice td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+#InvoiceGen .invoice th {
+  background-color: #f2f2f2;
+}
+
+#InvoiceGen .invoice tfoot td {
+  font-weight: bold;
+}
+
+#InvoiceGen .invoice .total {
+  background-color: #f2f2f2;
+}
+
+#InvoiceGen .invoice button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+#InvoiceGen .invoice button:hover {
+  background-color: #0056b3;
+}

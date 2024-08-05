@@ -1,0 +1,108 @@
+:root {
+  --primary-brown: #4e342e;
+  --secondary-brown: #795548;
+  --accent-color: #ffa726; /* or #8BC34A for a green accent */
+  --light-background: #f5f5f5;
+  --text-color: #3e2723;
+}
+
+.login-bg {
+  background-image: url("../../images/login-bg.png");
+  background-position: center;
+}
+
+#login-poster {
+  aspect-ratio: 3/3;
+  object-fit: cover;
+  border-radius: 1rem 0 0 1rem;
+  position: relative;
+}
+
+#login-poster-container {
+  position: relative;
+  border-radius: 1rem 0 0 1rem;
+  overflow: hidden;
+}
+
+#login-poster-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
+  z-index: 1;
+  border-radius: 1rem 0 0 1rem;
+}
+
+#login-poster-heading {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 3.3rem;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  font-family: "Georgia", serif;
+  z-index: 2;
+}
+
+.card {
+  border-radius: 1rem;
+}
+
+/* .input-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  border-color: var(--primary-brown);
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  background: transparent;
+}
+
+.form-label {
+  color: var(--primary-brown);
+  position: absolute;
+  top: 0.75rem;
+  left: 0.5rem;
+  padding: 0 0.25rem;
+  color: #999;
+  font-size: 1rem;
+  transition: all 0.2s;
+  pointer-events: none;
+}
+
+.form-control:focus ~ .form-label,
+.form-control:not(:placeholder-shown) ~ .form-label {
+  color: var(--accent-color);
+  top: -0.5rem;
+  left: 0.5rem;
+  color: #007bff;
+  font-size: 0.75rem;
+  background: #fff;
+  padding: 0 0.25rem;
+}
+
+.form-control:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.2rem rgba(255, 167, 38, 0.25);
+  outline: none;
+} */
+
+@media (max-width: 767.98px) {
+  #login-poster {
+    border-radius: 0 0 1rem 1rem;
+  }
+
+  #login-poster-container::before {
+    border-radius: 0 0 1rem 1rem;
+  }
+}

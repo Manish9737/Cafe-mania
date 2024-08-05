@@ -1,0 +1,54 @@
+extends layout
+
+
+
+block content
+  // Hero Section
+  .hero
+    .container
+      .hero-content
+        h1 Cafe Mania
+        p Welcome to Cafe Mania, where we deliver the best food right to your doorstep. Our speedy delivery and delicious meals make us the top choice for food lovers.
+        a.button(href='http://localhost:3000/') Visit Our Main Site
+
+  // About Section
+  .about
+    .container
+      h2 About Cafe Mania
+      p At Cafe Mania, we offer a delightful ambiance with cozy seating and an inviting atmosphere. Whether you're here to grab a quick bite or spend a leisurely afternoon, we provide the perfect setting for every occasion.
+
+  // Food Section
+  .food
+    .container
+      h2 Our Food
+      .food-grid
+        .food-item
+          img(src='/images/download.jpg', alt='Delicious Dish 1')
+          h3 Pizzas
+          p A brief description of Delicious Dish 1.
+        
+        .food-item
+          img(src='/images/burger.jpg', alt='Delicious Dish 2')
+          h3 Burgers
+          p A brief description of Delicious Dish 2.
+
+        .food-item
+          img(src='images/sandwich.jpg' , alt='Delicious Dish 3')
+          h3 Sandwiches
+          p A brief description of Delicious Dish 3.
+
+  // Extra Information Section
+  .extra-info
+    .container
+      h2 Why Choose Us?
+      ul
+        li Fresh and high-quality ingredients
+        li A wide variety of dishes to choose from
+        li Friendly and attentive staff
+        li Comfortable and clean environment
+        li Convenient online ordering and fast delivery
+
+  // Footer Section
+  footer
+    .container
+      p &copy; 2024 Cafe Mania. All rights reserved.

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CCTV Camera Screening</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+      }
+
+      header {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 20px;
+        width: 100%;
+        text-align: center;
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .camera-container {
+        width: 80%;
+        max-width: 800px;
+        background-color: #000;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      #camera-stream {
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>CCTV Camera Screening</h1>
+    </header>
+    <main>
+      <div class="camera-container">
+        <video id="camera-stream" autoplay ></video>
+      </div>
+    </main>
+  </body>
+</html>
+
+<script>
+  async function startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const videoElement = document.getElementById("camera-stream");
+      videoElement.srcObject = stream;
+    } catch (error) {
+      console.error("Error accessing the camera", error);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", startCamera);
+</script>

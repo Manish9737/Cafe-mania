@@ -1,0 +1,53 @@
+.custom-navbar {
+  background-color: #343a40;
+}
+
+.custom-navbar .navbar-brand {
+  font-family: "Pacifico", cursive;
+  font-size: 1.5rem;
+}
+
+.custom-navbar .nav-link {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+}
+
+.custom-navbar .nav-link:hover {
+  color: #f0ad4e !important;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 1px;
+  right: -7px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+
+@media (max-width: 576px) {
+  .custom-navbar .navbar-brand {
+    font-size: 1.1rem;
+  }
+
+  .custom-navbar .nav-link {
+    font-size: 0.9rem;
+    margin-right: 0.2rem;
+  }
+
+  .cart-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+    top: 3px;
+    left: 20px;
+  }
+}
