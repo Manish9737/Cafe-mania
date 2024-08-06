@@ -65,3 +65,42 @@ Café Mania is designed to streamline the management of your café while providi
    ```bash
    git clone https://github.com/your-username/cafe-maia.git
    cd cafe-maia
+   ```
+   
+2. **Install dependencies:**
+   ```bash
+   npm install
+   cd client
+   npm install
+   cd ..
+   ```
+   
+3. **Set up environment variables:**
+   ```bash
+   MONGO_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret
+   ```
+
+4. **Run the application:**
+   ```bash
+   npm start
+   ```
+
+## Usage
+
+  - **Admin Panel:**
+    - Access the admin dashboard at `https://cafe-mania-c9a90.web.app/admin`
+    - Use the default admin credentials to log in: `admin@gmail.com` / `12345`
+
+  - **Customer Experience:**
+    - Browse the menu, add items to the cart, and place orders at `http://cafe-mania-c9a90.web.app`
+
+
+## Contributing
+We welcome contributions to improve Café Maia. Please fork the repository and submit your pull requests.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Visit Us
+Check out the live site here: https://cafe-mania-c9a90.web.app
