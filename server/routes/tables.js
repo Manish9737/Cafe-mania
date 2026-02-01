@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const tableController = require("../controllers/table.controller");
-const bookingController = require("../controllers/booking.controller");
 const {
   createTable,
   getAllTables,
