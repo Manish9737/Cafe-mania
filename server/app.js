@@ -25,7 +25,7 @@ app.set("view engine", "jade");
 
 const corsOptions = {
   origin: ["https://cafe-mania-c9a90.web.app","http://localhost:3000", "http://localhost:5173", "http://localhost:5174"],
-  methods: "GET,POST,PUT,DELETE", 
+  methods: "GET,POST,PUT,DELETE","PATCH", 
   credentials: true,
 };
 
