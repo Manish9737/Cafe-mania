@@ -1,4 +1,4 @@
-const Tables = require("../models/table.model");
+const Tables = require("../models/tables");
 
 exports.addBooking = async (req, res) => {
   try {
