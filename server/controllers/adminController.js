@@ -160,7 +160,14 @@ exports.sendEmail = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Please fill all fields" });
 
-    sendEmail(to, subject, message);
+    const result = await sendEmail(to, subject, message);
+
+    if (!result) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to send email" });
+    }
+
     res.status(200).json({ success: true, message: "Email sent successfully" });
   } catch (error) {
     console.log(error);
