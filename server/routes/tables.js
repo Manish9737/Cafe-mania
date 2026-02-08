@@ -13,6 +13,7 @@ const {
   deleteBooking,
   getAllBookings,
   getBookingById,
+  getBookingsByTableId,
 } = require("../controllers/bookingController");
 
 router.post("/", createTable);
