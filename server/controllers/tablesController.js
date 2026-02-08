@@ -1,5 +1,4 @@
-const Tables = require('../models/tables');
-
+const Tables = require("../models/tables");
 
 exports.createTable = async (req, res) => {
   try {
@@ -12,7 +11,7 @@ exports.createTable = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Table created successfully',
+      message: "Table created successfully",
       data: table,
     });
   } catch (error) {
@@ -42,22 +41,21 @@ exports.getAllTables = async (req, res) => {
 
 exports.updateTable = async (req, res) => {
   try {
-    const table = await Tables.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const table = await Tables.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!table) {
       return res.status(404).json({
         success: false,
-        message: 'Table not found',
+        message: "Table not found",
       });
     }
 
     res.json({
       success: true,
-      message: 'Table updated',
+      message: "Table updated",
       data: table,
     });
   } catch (error) {
@@ -75,13 +73,13 @@ exports.deleteTable = async (req, res) => {
     if (!table) {
       return res.status(404).json({
         success: false,
-        message: 'Table not found',
+        message: "Table not found",
       });
     }
 
     res.json({
       success: true,
-      message: 'Table deleted successfully',
+      message: "Table deleted successfully",
     });
   } catch (error) {
     res.status(500).json({

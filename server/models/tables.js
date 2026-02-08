@@ -38,7 +38,7 @@ const tableSchema = new mongoose.Schema(
     tableNo: {
       type: String,
       required: true,
-      unique: true, // T1, T2, VIP-1, etc
+      unique: true,
       trim: true,
     },
     capacity: {

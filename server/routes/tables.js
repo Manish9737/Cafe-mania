@@ -11,6 +11,8 @@ const {
   addBooking,
   updateBooking,
   deleteBooking,
+  getAllBookings,
+  getBookingById,
 } = require("../controllers/bookingController");
 
 router.post("/", createTable);
@@ -18,6 +20,8 @@ router.get("/", getAllTables);
 router.patch("/:id", updateTable);
 router.delete("/:id", deleteTable);
 
+router.get("/bookings", getAllBookings);
+router.get("/bookings/:bookingId", getBookingById);
 router.post("/:tableId/bookings", addBooking);
 router.patch("/:tableId/bookings/:bookingId", updateBooking);
 router.delete("/:tableId/bookings/:bookingId", deleteBooking);
