@@ -113,6 +113,40 @@ exports.getBookingById = async (req, res) => {
   }
 };
 
+exports.getBookingsByTableId = async (req, res) => {
+  try {
+    const { tableId } = req.params;
+
+    const table = await Tables.findById(tableId).select(
+      "tableNo capacity status bookings"
+    );
+
+    if (!table) {
+      return res.status(404).json({
+        success: false,
+        message: "Table not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: table.bookings.length,
+      data: {
+        tableId: table._id,
+        tableNo: table.tableNo,
+        tableCapacity: table.capacity,
+        tableStatus: table.status,
+        bookings: table.bookings,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 exports.updateBooking = async (req, res) => {
   try {
     const { tableId, bookingId } = req.params;
