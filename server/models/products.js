@@ -33,6 +33,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    isVeg:{
+      type: Boolean,
+      default: true
+    },
     ratings: {
       type: [Number],
       default: [],

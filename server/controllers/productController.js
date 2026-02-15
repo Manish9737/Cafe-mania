@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 exports.addProduct = async (req, res) => {
-    const { name, subcategory, category, description, price } = req.body;
+    const { name, subcategory, category, description, price, isVeg } = req.body;
     // console.log(req.body)
     const imgFile = req.file ? req.file.filename : null;
     const image = `/images/${imgFile}`
@@ -26,6 +26,7 @@ exports.addProduct = async (req, res) => {
             image,
             description,
             price,
+            isVeg,
             ratings: []
         });
 
