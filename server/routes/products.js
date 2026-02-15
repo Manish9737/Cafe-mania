@@ -5,7 +5,8 @@ const {
      getProduct,
      addRatings,
      updateProduct,
-     deleteProduct
+     deleteProduct,
+     getPopularProducts
 } = require('../controllers/productController');
 const upload = require('../utils/multerConfig');
 var router = express.Router();
@@ -16,5 +17,7 @@ router.get('/:id', getProduct),
 router.patch('/:id', upload("images").single("image"), updateProduct),
 router.delete('/:id', deleteProduct),
 router.post('/ratings/:id', addRatings)
+
+router.get("/popular", getPopularProducts);
 
 module.exports = router;

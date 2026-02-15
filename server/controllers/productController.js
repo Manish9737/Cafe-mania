@@ -142,3 +142,46 @@ exports.deleteProduct = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error." });
     }
 }
+
+exports.getPopularProducts = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 5;
+
+    // Validate limit
+    if (limit < 1) {
+      return res.status(422).json({
+        success: false,
+        message: "Limit must be greater than 0",
+      });
+    }
+
+    const products = await Product.aggregate([
+      {
+        $addFields: {
+          ratingsCount: { $size: "$ratings" },
+        },
+      },
+      {
+        $sort: {
+          averageRating: -1,
+          ratingsCount: -1,
+        },
+      },
+      {
+        $limit: limit,
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
