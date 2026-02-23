@@ -14,6 +14,7 @@ const {
   getAllBookings,
   getBookingById,
   getBookingsByTableId,
+  getBookingsByUserId,
 } = require("../controllers/bookingController");
 
 router.post("/", createTable);
@@ -27,5 +28,8 @@ router.get("/:tableId/bookings", getBookingsByTableId);
 router.post("/:tableId/bookings", addBooking);
 router.patch("/:tableId/bookings/:bookingId", updateBooking);
 router.delete("/:tableId/bookings/:bookingId", deleteBooking);
+
+router.get("/users/:userId/bookings", getBookingsByUserId);
+
 
 module.exports = router;

@@ -2,15 +2,12 @@ const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema(
   {
-    customerName: {
-      type: String,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",   // make sure you have User model
       required: true,
-      trim: true,
     },
-    customerPhone: {
-      type: String,
-      trim: true,
-    },
+
     date: {
       type: String, // e.g. "2026-02-01"
       required: true,
@@ -29,6 +26,9 @@ const bookingSchema = new mongoose.Schema(
       enum: ['Booked', 'Completed', 'Cancelled'],
       default: 'Booked',
     },
+    notes: {
+      type: String,
+    }
   },
   { timestamps: true }
 );

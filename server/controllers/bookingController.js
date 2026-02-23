@@ -31,6 +31,53 @@ exports.addBooking = async (req, res) => {
   }
 };
 
+exports.getBookingsByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const tables = await Tables.find({
+      "bookings.userId": userId,
+    }).select("tableNo capacity status bookings");
+
+    let userBookings = [];
+
+    tables.forEach((table) => {
+      table.bookings.forEach((booking) => {
+        if (booking.userId.toString() === userId) {
+          userBookings.push({
+            _id: booking._id,
+            customerName: booking.customerName,
+            customerPhone: booking.customerPhone,
+            date: booking.date,
+            timeSlot: booking.timeSlot,
+            guests: booking.guests,
+            status: booking.status,
+            createdAt: booking.createdAt,
+
+            // Table info
+            tableId: table._id,
+            tableNo: table.tableNo,
+            tableCapacity: table.capacity,
+            tableStatus: table.status,
+          });
+        }
+      });
+    });
+
+    res.status(200).json({
+      success: true,
+      count: userBookings.length,
+      data: userBookings,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 exports.getAllBookings = async (req, res) => {
   try {
     const tables = await Tables.find().select(
