@@ -6,6 +6,7 @@ const sendEmail = require("../utils/email");
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
+const { generateAccessToken, generateRefreshToken } = require("../utils/generateToken");
 
 const JWT_SECRET = process.env.SECRET_KEY;
 
