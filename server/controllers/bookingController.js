@@ -94,10 +94,10 @@ exports.getBookingsByUserId = async (req, res) => {
     const { userId } = req.params;
 
     const tables = await Tables.find({
-      "bookings.userId": userId,
+      "bookings.user": userId,
     })
       .select("tableNo capacity status bookings")
-      .populate("userId");
+      .populate("user");
 
     let userBookings = [];
 
