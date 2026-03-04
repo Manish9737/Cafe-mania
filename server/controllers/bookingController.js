@@ -61,9 +61,6 @@ exports.addBooking = async (req, res) => {
 
     console.log("Creating booking:", newBooking);
 
-    table.bookings.push(newBooking);
-    table.status = "Reserved";
-
     const updatedTable = await Tables.findByIdAndUpdate(
       tableId,
       {
@@ -225,6 +222,7 @@ exports.getBookingById = async (req, res) => {
 exports.getBookingsByTableId = async (req, res) => {
   try {
     const { tableId } = req.params;
+    const { date, timeSlot } = req.query;
 
     const table = await Tables.findById(tableId).select(
       "tableNo capacity status bookings",
@@ -289,7 +287,16 @@ exports.updateBooking = async (req, res) => {
         .json({ success: false, message: "Booking not found" });
     }
 
-    Object.assign(booking, req.body);
+    table.bookings.pull(bookingId);
+
+    const activeBookings = table.bookings.filter(
+      (b) => b.status !== "Cancelled",
+    );
+
+    if (activeBookings.length === 0) {
+      table.status = "Available";
+    }
+
     await table.save();
 
     res.json({
@@ -349,6 +356,13 @@ exports.cancelBooking = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "Booking not found",
+      });
+    }
+
+    if (booking.status === "Cancelled") {
+      return res.status(400).json({
+        success: false,
+        message: "Booking is already cancelled",
       });
     }
 
