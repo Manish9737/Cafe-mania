@@ -12,7 +12,7 @@ exports.createOrder = async (req, res) => {
         .json({ success: false, message: "Invalid credentials." });
     }
 
-    const user = req.user.id;
+    const user = req.user._id;
 
     const {
       cart: cartId,
