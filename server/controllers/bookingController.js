@@ -1,9 +1,24 @@
+const { default: mongoose } = require("mongoose");
 const Tables = require("../models/tables");
 
 exports.addBooking = async (req, res) => {
   try {
     const { tableId } = req.params;
-    const { date, timeSlot, guests } = req.body;
+    const { date, timeSlot, guests, notes } = req.body;
+
+    if (!date || !timeSlot || !guests) {
+      return res.status(400).json({
+        success: false,
+        message: "Date, time slot and guests are required",
+      });
+    }
+
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({
+        success: false,
+        message: "User not authenticated",
+      });
+    }
 
     const table = await Tables.findById(tableId);
     if (!table) {
@@ -13,13 +28,16 @@ exports.addBooking = async (req, res) => {
       });
     }
 
-    const alreadyBooked = table.bookings.find(
-      (booking) =>
-        new Date(booking.date).toISOString().split("T")[0] ===
-          new Date(date).toISOString().split("T")[0] &&
+    const selectedDate = new Date(date).toISOString().split("T")[0];
+    const alreadyBooked = table.bookings.find((booking) => {
+      const bookingDate = new Date(booking.date).toISOString().split("T")[0];
+
+      return (
+        bookingDate === selectedDate &&
         booking.timeSlot === timeSlot &&
-        booking.status !== "Cancelled",
-    );
+        booking.status !== "Cancelled"
+      );
+    });
 
     if (alreadyBooked) {
       return res.status(400).json({
@@ -28,24 +46,40 @@ exports.addBooking = async (req, res) => {
       });
     }
 
-    table.bookings.push({
-      date: new Date(date),
-      timeSlot,
-      guests,
-      customerName: req.user.name,
-      customerPhone: req.user.phone,
-      userId: req.user._id,
-      status: "Confirmed",
-    });
+    console.log("User making booking:", req.user);
 
+    const newBooking = {
+      user: req.user._id,
+      customerName: req.user.name,
+      customerPhone: String(req.user.phone),
+      date: new Date(date),
+      timeSlot: timeSlot,
+      guests: Number(guests),
+      status: "Confirmed",
+      notes: notes || "",
+    };
+
+    console.log("Creating booking:", newBooking);
+
+    table.bookings.push(newBooking);
     table.status = "Reserved";
 
-    await table.save();
+    const updatedTable = await Tables.findByIdAndUpdate(
+      tableId,
+      {
+        $push: { bookings: newBooking },
+        $set: { status: "Reserved" }
+      },
+      { 
+        new: true, 
+        runValidators: true // This ensures validation runs
+      }
+    );
 
     res.status(201).json({
       success: true,
       message: "Booking added successfully",
-      data: table,
+      data: updatedTable,
     });
   } catch (error) {
     res.status(400).json({

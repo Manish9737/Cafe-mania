@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",   // make sure you have User model
+      ref: "User", 
       required: true,
     },
     customerName: {
@@ -17,7 +17,7 @@ const bookingSchema = new mongoose.Schema(
       required: true,
     },
     date: {
-      type: String, // e.g. "2026-02-01"
+      type: Date, 
       required: true,
     },
     timeSlot: {
@@ -31,14 +31,14 @@ const bookingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Booked', 'Completed', 'Cancelled'],
+      enum: ['Booked', 'Completed', 'Cancelled', 'Confirmed'],
       default: 'Booked',
     },
     notes: {
       type: String,
     }
   },
-  { timestamps: true }
+  { timestamps: true, _id: true }
 );
 
 const tableSchema = new mongoose.Schema(
