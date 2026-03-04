@@ -5,16 +5,20 @@ require("dotenv").config();
 const JWT_SECRET = process.env.SECRET_KEY;
 
 const auth = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader?.split(" ")[1];
-
-  if (!token) {
-    return res
-      .status(401)
-      .json({ success: false, message: "No token, authorization denied" });
-  }
-
   try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer "))
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    const token = authHeader?.split(" ")[1];
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ success: false, message: "No token, authorization denied" });
+    }
+
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(decoded.id).select("-password");
 
