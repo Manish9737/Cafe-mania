@@ -16,6 +16,7 @@ var orderRouter = require("./routes/order");
 var paymentRouter = require("./routes/payment");
 var tableRouter = require("./routes/tables");
 var dashboardRouter = require("./routes/dashboard");
+var settingsRouter = require("./routes/settings");
 
 var app = express();
 require("dotenv").config();
@@ -53,6 +54,7 @@ app.use("/api/feedback", feedbackRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/tables", tableRouter);
+app.use("/api/settings", settingsRouter);
 
 app.use("/api/admin", adminRouter);
 app.use("/api/admin/dashboard", dashboardRouter);

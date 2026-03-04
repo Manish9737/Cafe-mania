@@ -10,7 +10,9 @@ const { registerUser,
     updateUser,
     deleteUser, 
     profileData,
-    ForgotPassword
+    ForgotPassword,
+    refreshToken,
+    logoutUser
 } = require('../controllers/userController');
 const auth = require('../middlewares/auth');
 const adminAuth = require('../middlewares/adminAuth');
@@ -19,6 +21,9 @@ const upload = require('../utils/multerConfig');
 
 router.post("/", registerUser);
 router.post("/login", loginUser);
+router.get("/refresh", refreshToken);
+router.post("/logout", logoutUser);
+
 router.post("/forgot-password", ForgotPassword);
 router.post("/verifyOtp", VerifyOtp);
 router.post("/reset-password", resetPassword);

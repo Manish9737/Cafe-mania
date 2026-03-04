@@ -1,19 +1,40 @@
 const jwt = require("jsonwebtoken");
-require('dotenv').config();
+const Admin = require("../models/admin");
+require("dotenv").config();
 
 const JWT_SECRET = process.env.SECRET_KEY;
 
-const adminAuth = (req, res, next) => {
-    const token = req.cookies.adminToken || req.headers['authorization']?.split(' ')[1];
+const adminAuth = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.split(" ")[1];
+
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.admin = decoded;
-        next();
-    } catch (error) {
-        return res.status(401).json({ message: "Invalid token" });
+    const decoded = jwt.verify(token, JWT_SECRET);
+    console.log("Decoded token:", decoded);
+
+    if (decoded.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
     }
+
+    const admin = await Admin.findById(decoded.id).select("-password");
+
+    if (!admin) {
+      return res.status(401).json({
+        success: false,
+        message: "Admin not found",
+      });
+    }
+
+    req.admin = admin;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
 };
 
 module.exports = adminAuth;

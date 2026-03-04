@@ -2,6 +2,7 @@ const Admin = require("../models/admin");
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const sendEmail = require("../utils/email");
+const { generateAccessToken, generateRefreshToken } = require("../utils/generateAdminToken");
 
 const JWT_SECRET = process.env.SECRET_KEY;
 
@@ -46,7 +47,7 @@ exports.signIn = async (req, res) => {
         .json({ message: "Please fill all fields", success: false });
     }
 
-    const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ email })
 
     if (!admin) {
       return res
@@ -61,28 +62,86 @@ exports.signIn = async (req, res) => {
         .json({ message: "Invalid password", success: false });
     }
 
-    const token = JWT.sign({ id: admin._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const accessToken = generateAccessToken(admin);
+    const refreshToken = generateRefreshToken(admin);
 
-    res.cookie("adminToken", token, {
+    admin.refreshToken = refreshToken;
+    await admin.save();
+
+    res.cookie("adminRefreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 3600000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({
       success: true,
       message: "Admin signed in.",
-      token: token,
+      token: accessToken,
       admin,
     });
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ message: "Internal server error", success: false });
   }
+};
+
+exports.refreshAdminToken = async (req, res) => {
+  const token = req.cookies.adminRefreshToken;
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "No refresh token",
+    });
+  }
+
+  try {
+    const decoded = JWT.verify(token, process.env.JWT_REFRESH_SECRET);
+
+    const admin = await Admin.findById(decoded.id);
+
+    if (!admin || admin.refreshToken !== token) {
+      return res.status(403).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+    }
+
+    const newAccessToken = generateAccessToken(admin);
+
+    res.status(200).json({
+      success: true,
+      accessToken: newAccessToken,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      success: false,
+      message: "Refresh token expired",
+    });
+  }
+};
+
+exports.logoutAdmin = async (req, res) => {
+  const token = req.cookies.adminRefreshToken;
+
+  if (token) {
+    const admin = await Admin.findOne({ refreshToken: token });
+    if (admin) {
+      admin.refreshToken = null;
+      await admin.save();
+    }
+  }
+
+  res.clearCookie("adminRefreshToken");
+
+  res.status(200).json({
+    success: true,
+    message: "Admin logged out",
+  });
 };
 
 exports.changePassword = async (req, res) => {
