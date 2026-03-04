@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"No build step required for this server.\"",
+    "build": "echo \"No build step required for this server.\""
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
