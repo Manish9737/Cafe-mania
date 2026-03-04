@@ -68,12 +68,12 @@ exports.addBooking = async (req, res) => {
       tableId,
       {
         $push: { bookings: newBooking },
-        $set: { status: "Reserved" }
+        $set: { status: "Reserved" },
       },
-      { 
-        new: true, 
-        runValidators: true // This ensures validation runs
-      }
+      {
+        new: true,
+        runValidators: true, // This ensures validation runs
+      },
     );
 
     res.status(201).json({
@@ -97,30 +97,33 @@ exports.getBookingsByUserId = async (req, res) => {
       "bookings.user": userId,
     })
       .select("tableNo capacity status bookings")
-      .populate("user");
+      .populate("bookings.user", "name email phone");
 
     let userBookings = [];
 
     tables.forEach((table) => {
-      table.bookings.forEach((booking) => {
-        if (booking.userId.toString() === userId) {
-          userBookings.push({
-            _id: booking._id,
-            customerName: booking.customerName,
-            customerPhone: booking.customerPhone,
-            date: booking.date,
-            timeSlot: booking.timeSlot,
-            guests: booking.guests,
-            status: booking.status,
-            createdAt: booking.createdAt,
+      const userSpecificBookings = table.bookings.filter(
+        (booking) => booking.user && booking.user._id.toString() === userId,
+      );
 
-            // Table info
-            tableId: table._id,
-            tableNo: table.tableNo,
-            tableCapacity: table.capacity,
-            tableStatus: table.status,
-          });
-        }
+      userSpecificBookings.forEach((booking) => {
+        userBookings.push({
+          _id: booking._id,
+          customerName: booking.customerName,
+          customerPhone: booking.customerPhone,
+          date: booking.date,
+          timeSlot: booking.timeSlot,
+          guests: booking.guests,
+          status: booking.status,
+          notes: booking.notes,
+          createdAt: booking.createdAt,
+
+          // Table info
+          tableId: table._id,
+          tableNo: table.tableNo,
+          tableCapacity: table.capacity,
+          tableStatus: table.status,
+        });
       });
     });
 
