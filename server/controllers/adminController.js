@@ -169,7 +169,7 @@ exports.changePassword = async (req, res) => {
       });
     }
 
-    const adminId = req.admin?.id || req.adminId;
+    const adminId = req.admin?._id || req?.adminId;
 
     if (!adminId) {
       return res.status(401).json({

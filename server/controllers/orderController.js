@@ -141,7 +141,7 @@ exports.updateOrder = async (req, res) => {
 exports.userOrders = async (req, res) => {
   console.log(req.user)
   try {
-    const user = req.user.id;
+    const user = req.user._id;
     const orders = await Order.find({user: user})
       .populate("user")
       .populate({

@@ -214,7 +214,7 @@ exports.logoutUser = async (req, res) => {
 };
 
 exports.profileData = async (req, res) => {
-  const id = req.user.id;
+  const id = req.user._id;
   console.log("user:", req.user);
 
   try {
