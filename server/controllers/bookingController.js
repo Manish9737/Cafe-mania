@@ -376,7 +376,7 @@ exports.cancelBooking = async (req, res) => {
       table.status = "Available";
     }
 
-    await table.save();
+    await table.save({ validateBeforeSave: false });
 
     res.status(200).json({
       success: true,
