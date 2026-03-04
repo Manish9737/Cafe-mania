@@ -7,14 +7,6 @@
     "dev": "nodemon ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "echo \"No build step required for this server.\"",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "prettier": "prettier --check .",
-    "prettier:fix": "prettier --write .",
-    "prepare": "husky install",
-    "pre-commit": "npm run lint && npm run prettier:fix",
-    "pre-push": "npm test",
-    "postinstall": "npm run prepare"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
