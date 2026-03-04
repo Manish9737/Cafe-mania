@@ -32,8 +32,8 @@ exports.addBooking = async (req, res) => {
       date,
       timeSlot,
       guests,
-      customerName: req.user.customerName,
-      customerPhone: req.user.customerPhone,
+      customerName: req.user.name,
+      customerPhone: req.user.phone,
       userId: req.user._id,
       status: "Confirmed",
     });

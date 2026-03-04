@@ -44,7 +44,7 @@ exports.paymentVerification = async (req, res, next) => {
 
     const payment = new Payment({
       id: lastId + 1,
-      userId: req.user.id,
+      userId: req.user._id,
       currency,
       razorpay_order_id,
       razorpay_payment_id,
