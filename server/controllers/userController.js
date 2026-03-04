@@ -215,6 +215,7 @@ exports.logoutUser = async (req, res) => {
 
 exports.profileData = async (req, res) => {
   const id = req.user.id;
+  console.log("user:", req.user);
 
   try {
     const user = await User.findById(id);
@@ -223,7 +224,7 @@ exports.profileData = async (req, res) => {
 
     res.status(200).json({ success: true, user });
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error !", error });
