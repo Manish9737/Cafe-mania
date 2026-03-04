@@ -15,7 +15,7 @@ exports.addBooking = async (req, res) => {
 
     const alreadyBooked = table.bookings.find(
       (booking) =>
-        booking.date.toISOString().split("T")[0] ===
+        new Date(booking.date).toISOString().split("T")[0] ===
           new Date(date).toISOString().split("T")[0] &&
         booking.timeSlot === timeSlot &&
         booking.status !== "Cancelled",
@@ -29,7 +29,7 @@ exports.addBooking = async (req, res) => {
     }
 
     table.bookings.push({
-      date,
+      date: new Date(date),
       timeSlot,
       guests,
       customerName: req.user.name,
