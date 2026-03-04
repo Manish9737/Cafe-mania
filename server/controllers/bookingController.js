@@ -3,7 +3,7 @@ const Tables = require("../models/tables");
 exports.addBooking = async (req, res) => {
   try {
     const { tableId } = req.params;
-    const bookingData = req.body;
+    const { date, timeSlot, guests } = req.body;
 
     const table = await Tables.findById(tableId);
     if (!table) {
@@ -13,7 +13,31 @@ exports.addBooking = async (req, res) => {
       });
     }
 
-    table.bookings.push(bookingData);
+    const alreadyBooked = table.bookings.find(
+      (booking) =>
+        booking.date.toISOString().split("T")[0] ===
+          new Date(date).toISOString().split("T")[0] &&
+        booking.timeSlot === timeSlot &&
+        booking.status !== "Cancelled",
+    );
+
+    if (alreadyBooked) {
+      return res.status(400).json({
+        success: false,
+        message: "This table is already booked for the selected date and time.",
+      });
+    }
+
+    table.bookings.push({
+      date,
+      timeSlot,
+      guests,
+      customerName: req.user.customerName,
+      customerPhone: req.user.customerPhone,
+      userId: req.user.id,
+      status: "Confirmed",
+    });
+
     table.status = "Reserved";
 
     await table.save();
@@ -37,7 +61,9 @@ exports.getBookingsByUserId = async (req, res) => {
 
     const tables = await Tables.find({
       "bookings.userId": userId,
-    }).select("tableNo capacity status bookings");
+    })
+      .select("tableNo capacity status bookings")
+      .populate("userId");
 
     let userBookings = [];
 
@@ -76,7 +102,6 @@ exports.getBookingsByUserId = async (req, res) => {
     });
   }
 };
-
 
 exports.getAllBookings = async (req, res) => {
   try {
@@ -165,7 +190,7 @@ exports.getBookingsByTableId = async (req, res) => {
     const { tableId } = req.params;
 
     const table = await Tables.findById(tableId).select(
-      "tableNo capacity status bookings"
+      "tableNo capacity status bookings",
     );
 
     if (!table) {
@@ -175,8 +200,23 @@ exports.getBookingsByTableId = async (req, res) => {
       });
     }
 
+    let isAvailable = true;
+
+    if (date && timeSlot) {
+      const conflict = table.bookings.find(
+        (booking) =>
+          booking.date.toISOString().split("T")[0] ===
+            new Date(date).toISOString().split("T")[0] &&
+          booking.timeSlot === timeSlot &&
+          booking.status !== "Cancelled",
+      );
+
+      if (conflict) isAvailable = false;
+    }
+
     res.status(200).json({
       success: true,
+      isAvailable,
       count: table.bookings.length,
       data: {
         tableId: table._id,
@@ -246,6 +286,51 @@ exports.deleteBooking = async (req, res) => {
       success: true,
       message: "Booking removed successfully",
       data: table,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.cancelBooking = async (req, res) => {
+  try {
+    const { tableId, bookingId } = req.params;
+
+    const table = await Tables.findById(tableId);
+    if (!table) {
+      return res.status(404).json({
+        success: false,
+        message: "Table not found",
+      });
+    }
+
+    const booking = table.bookings.id(bookingId);
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    booking.status = "Cancelled";
+
+    const activeBookings = table.bookings.filter(
+      (b) => b.status !== "Cancelled",
+    );
+
+    if (activeBookings.length === 0) {
+      table.status = "Available";
+    }
+
+    await table.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Booking cancelled successfully",
+      data: booking,
     });
   } catch (error) {
     res.status(500).json({

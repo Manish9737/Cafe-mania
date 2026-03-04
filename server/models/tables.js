@@ -7,7 +7,15 @@ const bookingSchema = new mongoose.Schema(
       ref: "User",   // make sure you have User model
       required: true,
     },
-
+    customerName: {
+      type: String,
+      required: true,
+      trim: true,
+    }, 
+    customerPhone: {
+      type: String,
+      required: true,
+    },
     date: {
       type: String, // e.g. "2026-02-01"
       required: true,

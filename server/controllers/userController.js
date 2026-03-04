@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 const { generateOTP } = require("../utils/generateOtp");
 const sendEmail = require("../utils/email");
 require("dotenv").config();
-const fs = require('fs');
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
 
 const JWT_SECRET = process.env.SECRET_KEY;
 
@@ -20,7 +20,6 @@ exports.registerUser = async (req, res) => {
         .json({ success: false, message: "User already exists." });
     }
 
-
     const lastUser = await User.findOne().sort({ id: -1 });
     const lastId = lastUser ? lastUser.id + 1 : 1;
 
@@ -28,7 +27,9 @@ exports.registerUser = async (req, res) => {
 
     await newUser.save();
 
-    const token = jwt.sign({ id: newUser._id }, JWT_SECRET, 
+    const token = jwt.sign(
+      { id: newUser._id },
+      JWT_SECRET,
       // {expiresIn: "1h",}
     );
 
@@ -99,8 +100,7 @@ exports.registerUser = async (req, res) => {
       </html>
     `;
 
-    await sendEmail(newUser.email, subject, html)
-
+    await sendEmail(newUser.email, subject, html);
   } catch (error) {
     // console.log(error)
     res
@@ -141,7 +141,7 @@ exports.loginUser = async (req, res) => {
         .json({ error: "Invalid credentials.", success: false });
     }
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET );
+    const token = jwt.sign({ id: user._id }, JWT_SECRET);
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -160,19 +160,22 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-exports.profileData = async(req, res) => {
+exports.profileData = async (req, res) => {
   const id = req.user.id;
 
   try {
     const user = await User.findById(id);
-    if (!user) return res.status(404).json({ success: true, message: "User not found"});
+    if (!user)
+      return res.status(404).json({ success: true, message: "User not found" });
 
     res.status(200).json({ success: true, user });
   } catch (error) {
     // console.log(error);
-    return res.status(500).json({ success: false, message: "Internal server error !"});
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error !" });
   }
-}
+};
 
 exports.getUser = async (req, res) => {
   const { id } = req.params;
@@ -203,18 +206,21 @@ exports.getUser = async (req, res) => {
 
 exports.ForgotPassword = async (req, res) => {
   const { email } = req.body;
+  console.log(email);
   try {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found with this email.' });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found with this email." });
     }
 
     const otp = generateOTP();
-
     user.resetPasswordOtp = otp;
     await user.save();
-    const subject = 'Password Reset OTP';
+
+    const subject = "Password Reset OTP";
     const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -275,7 +281,7 @@ exports.ForgotPassword = async (req, res) => {
                     <h2>Password Reset OTP</h2>
                 </div>
                 <div class="content">
-                    <p>Dear ${user.name || 'User'},</p>
+                    <p>Dear ${user.name || "User"},</p>
                     <p>Your OTP for password reset is: <strong>${otp}</strong></p>
                     <p>Please use this OTP to proceed with resetting your password.</p>
                 </div>
@@ -289,11 +295,15 @@ exports.ForgotPassword = async (req, res) => {
 
     await sendEmail(user.email, subject, htmlContent);
 
-
-    return res.status(200).json({ success: true, message: 'OTP sent to your email.' });
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP sent to your email." });
   } catch (error) {
-    console.error('Error:', error.message);
-    return res.status(500).json({ success: false, message: 'Internal server error.' });
+    console.error("Error:", error.message);
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error." });
   }
 };
 
@@ -301,52 +311,80 @@ exports.VerifyOtp = async (req, res) => {
   const { otp, email } = req.body;
 
   try {
-    if (!otp || !email) return res.status(400).json({ success: false, message: 'Please provide OTP and email.' });
-
+    if (!otp || !email)
+      return res
+        .status(400)
+        .json({ success: false, message: "Please provide OTP and email." });
 
     const user = await User.findOne({ email });
 
-    if (!user) return res.status(404).json({ success: false, message: "User not found." });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
 
-    if (otp != user.resetPasswordOtp) return res.status(400).json({ success: false, message: "Invalid otp." });
+    if (otp != user.resetPasswordOtp)
+      return res.status(400).json({ success: false, message: "Invalid otp." });
 
-    res.status(200).json({ success: true, message: "Otp verified successfully !!!" })
+    res
+      .status(200)
+      .json({ success: true, message: "Otp verified successfully !!!" });
 
     user.resetPasswordOtp = null;
     await user.save();
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({ success: false, message: "Internal server error." })
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error." });
   }
-}
+};
 
 exports.resetPassword = async (req, res) => {
   const { email, password } = req.body;
 
+  console.log(email, password);
+
   try {
-    if (!email || !password) return res.status(400).json({ success: false, message: "Invalid credentials." });
+    if (!email || !password)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials." });
 
     const user = await User.findOne({ email });
 
-    if (!user) return res.status(404).json({ success: false, message: "User not found !" });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found !" });
 
-    if (await bcrypt.compare(password, user.password)) return res.status(400).json({ success: false, message: "New password should be different." });
+    if (await bcrypt.compare(password, user.password))
+      return res
+        .status(400)
+        .json({ success: false, message: "New password should be different." });
 
     user.password = password;
     await user.save();
 
-    res.status(200).json({ success: true, message: "Password reseted successfullly." })
+    res
+      .status(200)
+      .json({ success: true, message: "Password reseted successfullly." });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: "Internal server error !" })
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error !" });
   }
-}
+};
 
 exports.contactUs = async (req, res) => {
   const { name, email, message } = req.body;
 
   try {
-    if (!name || !email) return res.status(400).json({ success: false, message: "Please fill all fields." })
+    if (!name || !email)
+      return res
+        .status(400)
+        .json({ success: false, message: "Please fill all fields." });
 
     const recepient = "manishkumavat73@gmail.com";
     const subject = `Contact from ${name}.`;
@@ -410,12 +448,16 @@ exports.contactUs = async (req, res) => {
 
     sendEmail(recepient, subject, html);
 
-    res.status(200).json({ success: true, message: "Contact message sent successfully." })
+    res
+      .status(200)
+      .json({ success: true, message: "Contact message sent successfully." });
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({ success: false, message: "Internal server error" })
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
-}
+};
 
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
@@ -423,19 +465,25 @@ exports.updateUser = async (req, res) => {
 
   if (updates.addresses) {
     updates.addresses = JSON.parse(updates.addresses);
-}
+  }
 
   try {
-    if (Object.keys(updates).length === 0) return res.status(400).json({ success: false, message: "Updates not provided." });
+    if (Object.keys(updates).length === 0)
+      return res
+        .status(400)
+        .json({ success: false, message: "Updates not provided." });
 
     const user = await User.findById(id);
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
 
     if (req.file) {
       updates.image = `/images/${req.file ? req.file.filename : null}`;
 
       if (user.image) {
-        const oldImagePath = path.join(__dirname, '..', 'public', user.image);
+        const oldImagePath = path.join(__dirname, "..", "public", user.image);
         fs.unlink(oldImagePath, (err) => {
           if (err) {
             console.error(`Failed to delete old image: ${oldImagePath}`, err);
@@ -446,28 +494,47 @@ exports.updateUser = async (req, res) => {
       }
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, updates, {
+      new: true,
+    });
 
-    res.status(200).json({ success: true, message: "User updated successfully.", user: updatedUser })
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully.",
+      user: updatedUser,
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (!res.headersSent) {
-      return res.status(500).json({ success: false, message: "Internal server error" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
     }
-    return res.json(500).json({ success: false, message: "Internal server error" })
+    return res
+      .json(500)
+      .json({ success: false, message: "Internal server error" });
   }
-}
+};
 
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await User.findByIdAndDelete(id);
 
-    if (!user) return res.status(404).json({ success: false, message: "User not found !" });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found !" });
 
-    res.status(200).json({ success: true, message: "User deleted successfully." })
+    res
+      .status(200)
+      .json({ success: true, message: "User deleted successfully." });
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({ success: false, message: "Internal server error", error: error.message });
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
   }
-}
+};

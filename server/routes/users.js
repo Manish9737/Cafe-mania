@@ -4,13 +4,13 @@ const { registerUser,
     loginUser,
     getUser,
     allUsers,
-    ForgotPassword,
     VerifyOtp,
     resetPassword,
     contactUs,
     updateUser,
     deleteUser, 
-    profileData
+    profileData,
+    ForgotPassword
 } = require('../controllers/userController');
 const auth = require('../middlewares/auth');
 const adminAuth = require('../middlewares/adminAuth');
