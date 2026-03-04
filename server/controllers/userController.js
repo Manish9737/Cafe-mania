@@ -42,7 +42,6 @@ exports.registerUser = async (req, res) => {
     });
 
     res.status(200).json({ success: true, message: "User registered." });
-    console.log("User registered");
 
     const subject = "Congratulations! You have successfully registered.";
     const html = `
@@ -103,7 +102,6 @@ exports.registerUser = async (req, res) => {
 
     await sendEmail(newUser.email, subject, html);
   } catch (error) {
-    // console.log(error)
     res
       .status(500)
       .json({ success: false, message: "Internal server error.", error });
@@ -119,7 +117,6 @@ exports.allUsers = async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Internal server error", error });
-    console.log(error);
   }
 };
 
@@ -157,12 +154,10 @@ exports.loginUser = async (req, res) => {
     res
       .status(200)
       .json({ success: true, message: "Login successful", token: accessToken });
-    console.log("User logged in");
   } catch (error) {
     res
       .status(500)
       .json({ success: false, message: "Internal server error", error });
-    console.log(error);
   }
 };
 
@@ -215,7 +210,6 @@ exports.logoutUser = async (req, res) => {
 
 exports.profileData = async (req, res) => {
   const id = req.user._id;
-  console.log("user:", req.user);
 
   try {
     const user = await User.findById(id);
@@ -224,7 +218,6 @@ exports.profileData = async (req, res) => {
 
     res.status(200).json({ success: true, user });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error !", error });
@@ -251,7 +244,6 @@ exports.getUser = async (req, res) => {
 
     res.status(201).json({ success: true, message: "User found", user });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error." });
@@ -260,7 +252,6 @@ exports.getUser = async (req, res) => {
 
 exports.ForgotPassword = async (req, res) => {
   const { email } = req.body;
-  console.log(email);
   try {
     const user = await User.findOne({ email });
 
@@ -353,8 +344,6 @@ exports.ForgotPassword = async (req, res) => {
       .status(200)
       .json({ success: true, message: "OTP sent to your email." });
   } catch (error) {
-    console.error("Error:", error.message);
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error." });
@@ -387,7 +376,6 @@ exports.VerifyOtp = async (req, res) => {
     user.resetPasswordOtp = null;
     await user.save();
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error." });
@@ -397,7 +385,6 @@ exports.VerifyOtp = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(email, password);
 
   try {
     if (!email || !password)
@@ -424,7 +411,6 @@ exports.resetPassword = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Password reseted successfullly." });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error !" });
@@ -506,7 +492,6 @@ exports.contactUs = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Contact message sent successfully." });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
@@ -558,7 +543,6 @@ exports.updateUser = async (req, res) => {
       user: updatedUser,
     });
   } catch (error) {
-    console.log(error);
     if (!res.headersSent) {
       return res
         .status(500)
@@ -584,7 +568,6 @@ exports.deleteUser = async (req, res) => {
       .status(200)
       .json({ success: true, message: "User deleted successfully." });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",

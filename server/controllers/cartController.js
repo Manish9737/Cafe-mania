@@ -2,7 +2,6 @@ const Cart = require("../models/cart")
 const Product = require("../models/products")
 
 exports.addProduct = async (req, res) => {
-    console.log(req.body)
     const { productId, quantity } = req.body;
 
     try {
@@ -22,7 +21,6 @@ exports.addProduct = async (req, res) => {
         await req.cart.save();
         res.json(req.cart);
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
@@ -35,7 +33,6 @@ exports.removeProduct = async (req, res) => {
         await req.cart.save();
         res.json(req.cart);
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
@@ -66,7 +63,6 @@ exports.updateCart = async(req, res) => {
         res.json(req.cart);
 
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ success: false, message: "Internal server error"});  
     }
 }

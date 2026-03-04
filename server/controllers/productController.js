@@ -4,10 +4,8 @@ const path = require('path');
 
 exports.addProduct = async (req, res) => {
     const { name, subcategory, category, description, price, isVeg } = req.body;
-    // console.log(req.body)
     const imgFile = req.file ? req.file.filename : null;
     const image = `/images/${imgFile}`
-    console.log(image)
 
     try {
         if (!name || !subcategory || !category || !price) {
@@ -33,7 +31,6 @@ exports.addProduct = async (req, res) => {
         await newProduct.save()
         res.status(201).json({ success: true, message: "Product added successfully." })
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, message: "Internel server error." })
     }
 }
@@ -43,7 +40,6 @@ exports.allProducts = async (req, res) => {
         const products = await Product.find({});
         res.status(200).json({ success: true, Products: products })
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, message: "Internel server error." })
     }
 }
@@ -64,7 +60,6 @@ exports.getProduct = async (req, res) => {
 
         res.status(200).json({ success: true, Product: product })
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, message: "Internel server error." })
     }
 }
@@ -95,7 +90,6 @@ exports.addRatings = async (req, res) => {
 
         res.status(200).json({ success: true, message: "Rating added successfully.", product });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ success: false, message: "Internal server error." });
     }
 };
@@ -115,10 +109,8 @@ exports.updateProduct = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Product not found.' });
         }
 
-        // console.log(updatedProduct)
         res.status(200).json({ success: true, message: 'Product updated successfully.', product: updatedProduct });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ success: false, message: 'Internal server error.' });
     }
 };
@@ -139,7 +131,6 @@ exports.deleteProduct = async (req, res) => {
 
         res.status(200).json({ success: true, message: "Product deleted successfully." });
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, message: "Internal server error." });
     }
 }
@@ -148,7 +139,6 @@ exports.getPopularProducts = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 5;
 
-    // Validate limit
     if (limit < 1) {
       return res.status(422).json({
         success: false,
@@ -179,7 +169,6 @@ exports.getPopularProducts = async (req, res) => {
       products,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       message: "Internal server error",

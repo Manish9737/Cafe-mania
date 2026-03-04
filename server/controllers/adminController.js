@@ -30,7 +30,6 @@ exports.registerAdmin = async (req, res) => {
 
     res.status(200).json({ message: "Admin registered.", success: true });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ message: "Internal server error.", success: false });
@@ -82,7 +81,6 @@ exports.signIn = async (req, res) => {
       admin,
     });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ message: "Internal server error", success: false });
@@ -229,7 +227,6 @@ exports.sendEmail = async (req, res) => {
 
     res.status(200).json({ success: true, message: "Email sent successfully" });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error !" });

@@ -12,7 +12,6 @@ const adminAuth = async (req, res, next) => {
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("Decoded token:", decoded);
 
     if (decoded.role !== "admin") {
       return res.status(403).json({

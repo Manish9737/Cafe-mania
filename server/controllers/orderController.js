@@ -66,7 +66,6 @@ exports.createOrder = async (req, res) => {
         order: populatedOrder,
       });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error." });
@@ -90,7 +89,6 @@ exports.getOrder = async (req, res) => {
 
     res.status(200).json({ success: true, order });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
@@ -107,7 +105,6 @@ exports.allOrders = async (req, res) => {
 
     res.status(200).json({ success: true, orders });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
@@ -131,7 +128,6 @@ exports.updateOrder = async (req, res) => {
 
     res.status(200).json({ success: true, updatedOrder });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error." });
@@ -139,7 +135,6 @@ exports.updateOrder = async (req, res) => {
 };
 
 exports.userOrders = async (req, res) => {
-  console.log(req.user)
   try {
     const user = req.user._id;
     const orders = await Order.find({user: user})
@@ -151,7 +146,6 @@ exports.userOrders = async (req, res) => {
       });
     res.status(200).json({ success: true, orders });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error." });
