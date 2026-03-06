@@ -55,7 +55,7 @@ exports.addBooking = async (req, res) => {
       date: new Date(date),
       timeSlot: timeSlot,
       guests: Number(guests),
-      status: "Confirmed",
+      status: "Booked",
       notes: notes || "",
     };
 
