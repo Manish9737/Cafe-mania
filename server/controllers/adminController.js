@@ -40,7 +40,7 @@ exports.signIn = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    if ((!email, !password)) {
+    if (!email || !password) {
       return res
         .status(400)
         .json({ message: "Please fill all fields", success: false });
@@ -98,7 +98,7 @@ exports.refreshAdminToken = async (req, res) => {
   }
 
   try {
-    const decoded = JWT.verify(token, process.env.JWT_REFRESH_SECRET);
+    const decoded = JWT.verify(token, process.env.REFRESH_SECRET);
 
     const admin = await Admin.findById(decoded.id);
 
