@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Admin = require("../models/admin");
 require("dotenv").config();
 
-const JWT_SECRET = process.env.SECRET_KEY;
+
 
 const adminAuth = async (req, res, next) => {
   try {
@@ -11,11 +11,11 @@ const adminAuth = async (req, res, next) => {
     if (!authHeader || !authHeader.startsWith("Bearer "))
       return res.status(401).json({ success: false, message: "Unauthorized" });
 
-    const token = authHeader?.split(" ")[1];
+    const token = authHeader.split(" ")[1];
 
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    if (!token) return res.status(401).json({ success: false, message: "Unauthorized" });
 
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
     console.log(decoded);
 

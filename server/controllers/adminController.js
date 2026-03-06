@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const sendEmail = require("../utils/email");
 const { generateAccessToken, generateRefreshToken } = require("../utils/generateAdminToken");
 
-const JWT_SECRET = process.env.SECRET_KEY;
+
 
 exports.registerAdmin = async (req, res) => {
   const { name, email, password } = req.body;
