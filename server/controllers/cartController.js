@@ -28,14 +28,35 @@ exports.addProduct = async (req, res) => {
 exports.removeProduct = async (req, res) => {
     const { productId } = req.body;
 
-    try {
-        req.cart.products = req.cart.products.filter(item => !item.product.equals(productId));
-        await req.cart.save();
-        res.json(req.cart);
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal server error" })
+    if (!productId) {
+        return res.status(400).json({ success: false, message: "productId is required" });
     }
-}
+
+    try {
+        const existingIndex = req.cart.products.findIndex(item => 
+            item.product.equals(productId)
+        );
+
+        if (existingIndex === -1) {
+            return res.status(404).json({ success: false, message: "Product not found in cart" });
+        }
+
+        req.cart.products = req.cart.products.filter(item => 
+            !item.product.equals(productId)
+        );
+
+        await req.cart.save(); 
+
+        return res.status(200).json({ 
+            success: true, 
+            message: "Product removed from cart",
+            cart: req.cart 
+        });
+    } catch (error) {
+        console.error("Remove product error:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
 
 exports.getUserCart = async (req, res) => {
     res.json(req.cart);
