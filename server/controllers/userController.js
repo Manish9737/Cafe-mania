@@ -13,6 +13,10 @@ const JWT_SECRET = process.env.SECRET_KEY;
 exports.registerUser = async (req, res) => {
   const { name, email, phone, password } = req.body;
 
+  if(req.file) {
+    req.body.image = `/images/${req.file.filename}`;
+  }
+
   try {
     let user = await User.findOne({ email });
     if (user) {

@@ -19,7 +19,7 @@ const adminAuth = require('../middlewares/adminAuth');
 const upload = require('../utils/multerConfig');
 
 
-router.post("/", registerUser);
+router.post("/", upload('images').single('image'), registerUser);
 router.post("/login", loginUser);
 router.get("/refresh", refreshToken);
 router.post("/logout", logoutUser);
