@@ -103,7 +103,7 @@ exports.updateProduct = async (req, res) => {
     }
 
     try {
-        const updatedProduct = await Product.findOneAndUpdate({ _id: id }, updates, { new: true });
+        const updatedProduct = await Product.findOneAndUpdate({ _id: id }, updates, { returnDocument: "after" });
 
         if (!updatedProduct) {
             return res.status(404).json({ success: false, message: 'Product not found.' });
