@@ -146,7 +146,6 @@ exports.changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword, confirmPassword } = req.body;
     const adminId = req.admin?._id || req?.admin?.id || req?.adminId;
-    console.log("Admin ID from request:", req.admin);
 
     if (!oldPassword || !newPassword || !confirmPassword) {
       return res.status(400).json({
