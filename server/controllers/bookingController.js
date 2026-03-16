@@ -46,8 +46,6 @@ exports.addBooking = async (req, res) => {
       });
     }
 
-    console.log("User making booking:", req.user);
-
     const newBooking = {
       user: req.user._id,
       customerName: req.user.name,
@@ -59,8 +57,6 @@ exports.addBooking = async (req, res) => {
       notes: notes || "",
     };
 
-    console.log("Creating booking:", newBooking);
-
     const updatedTable = await Tables.findByIdAndUpdate(
       tableId,
       {
@@ -69,7 +65,7 @@ exports.addBooking = async (req, res) => {
       },
       {
         new: true,
-        runValidators: true, // This ensures validation runs
+        runValidators: true,
       },
     );
 
@@ -272,6 +268,7 @@ exports.getBookingsByTableId = async (req, res) => {
 exports.updateBooking = async (req, res) => {
   try {
     const { tableId, bookingId } = req.params;
+    const updates = req.body;
 
     const table = await Tables.findById(tableId);
     if (!table) {
@@ -287,7 +284,7 @@ exports.updateBooking = async (req, res) => {
         .json({ success: false, message: "Booking not found" });
     }
 
-    table.bookings.pull(bookingId);
+    Object.assign(booking, updates);
 
     const activeBookings = table.bookings.filter(
       (b) => b.status !== "Cancelled",

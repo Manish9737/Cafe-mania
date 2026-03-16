@@ -13,8 +13,10 @@ const JWT_SECRET = process.env.SECRET_KEY;
 exports.registerUser = async (req, res) => {
   const { name, email, phone, password } = req.body;
 
+  let imageUrl = null;
+
   if(req.file) {
-    req.body.image = `/images/${req.file.filename}`;
+    imageUrl = `/images/${req.file ? req.file.filename : null}`;
   }
 
   try {
@@ -28,22 +30,9 @@ exports.registerUser = async (req, res) => {
     const lastUser = await User.findOne().sort({ id: -1 });
     const lastId = lastUser ? lastUser.id + 1 : 1;
 
-    const newUser = new User({ id: lastId, name, email, phone, password });
+    const newUser = new User({ id: lastId, name, email, phone, password, image: imageUrl });
 
     await newUser.save();
-
-    const token = jwt.sign(
-      { id: newUser._id },
-      JWT_SECRET,
-      // {expiresIn: "1h",}
-    );
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      // maxAge: 3600000,
-    });
 
     res.status(200).json({ success: true, message: "User registered." });
 

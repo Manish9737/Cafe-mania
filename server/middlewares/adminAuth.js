@@ -17,8 +17,6 @@ const adminAuth = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
-    console.log(decoded);
-
     if (decoded.role !== "admin") {
       return res.status(403).json({
         success: false,
