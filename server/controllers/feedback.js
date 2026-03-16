@@ -1,10 +1,10 @@
 const ContactFeedback = require("../models/contactFeedback")
 
 exports.newFeedback = async (req, res) => {
-    const { name, email, message } = req.body;
+    const { name, email, message, ratings } = req.body;
 
     try {
-        const feedback = new ContactFeedback({ name, email, message });
+        const feedback = new ContactFeedback({ name, email, message, ratings });
         await feedback.save();
 
         res.status(200).json({ message: "Feedback submitted successfully.", success: true });

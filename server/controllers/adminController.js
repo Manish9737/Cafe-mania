@@ -4,8 +4,6 @@ const bcrypt = require("bcrypt");
 const sendEmail = require("../utils/email");
 const { generateAccessToken, generateRefreshToken } = require("../utils/generateAdminToken");
 
-
-
 exports.registerAdmin = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -35,6 +33,8 @@ exports.registerAdmin = async (req, res) => {
       .json({ message: "Internal server error.", success: false });
   }
 };
+
+
 
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
@@ -167,7 +167,7 @@ exports.changePassword = async (req, res) => {
       });
     }
 
-    const adminId = req.admin?._id || req?.adminId;
+    const adminId = req.admin?.id || req?.adminId;
 
     if (!adminId) {
       return res.status(401).json({

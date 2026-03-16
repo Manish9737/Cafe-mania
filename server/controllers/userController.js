@@ -419,7 +419,7 @@ exports.contactUs = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Please fill all fields." });
 
-    const recepient = "manishkumavat73@gmail.com";
+    const recepient = `${process.env.RECEPIENT_EMAIL}`;
     const subject = `Contact from ${name}.`;
     const html = `
     <!DOCTYPE html>
