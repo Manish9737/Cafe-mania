@@ -334,7 +334,7 @@ exports.deleteBooking = async (req, res) => {
       message: error.message,
     });
   }
-};
+}
 
 exports.cancelBooking = async (req, res) => {
   try {
@@ -348,7 +348,10 @@ exports.cancelBooking = async (req, res) => {
       });
     }
 
-    const booking = table.bookings.id(bookingId);
+    const booking = table.bookings.find(
+      (b) => b._id.toString() === bookingId
+    );
+
     if (!booking) {
       return res.status(404).json({
         success: false,

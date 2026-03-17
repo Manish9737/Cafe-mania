@@ -30,7 +30,7 @@ router.get("/:tableId/bookings", getBookingsByTableId);
 router.post("/:tableId/bookings", auth, addBooking);
 router.patch("/:tableId/bookings/:bookingId", updateBooking);
 router.delete("/:tableId/bookings/:bookingId", deleteBooking);
-router.patch("/:tableId/bookings/:bookingId/cancel", cancelBooking);
+router.patch("/:tableId/bookings/:bookingId/cancel", auth, cancelBooking);
 
 router.get("/users/:userId/bookings", getBookingsByUserId);
 
