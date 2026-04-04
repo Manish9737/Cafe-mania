@@ -6,7 +6,10 @@ const sendEmail = require("../utils/email");
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
-const { generateAccessToken, generateRefreshToken } = require("../utils/generateToken");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../utils/generateToken");
 
 const JWT_SECRET = process.env.SECRET_KEY;
 
@@ -15,7 +18,7 @@ exports.registerUser = async (req, res) => {
 
   let imageUrl = null;
 
-  if(req.file) {
+  if (req.file) {
     imageUrl = `/images/${req.file ? req.file.filename : null}`;
   }
 
@@ -30,7 +33,14 @@ exports.registerUser = async (req, res) => {
     const lastUser = await User.findOne().sort({ id: -1 });
     const lastId = lastUser ? lastUser.id + 1 : 1;
 
-    const newUser = new User({ id: lastId, name, email, phone, password, image: imageUrl });
+    const newUser = new User({
+      id: lastId,
+      name,
+      email,
+      phone,
+      password,
+      image: imageUrl,
+    });
 
     await newUser.save();
 
@@ -377,7 +387,6 @@ exports.VerifyOtp = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
   const { email, password } = req.body;
-
 
   try {
     if (!email || !password)

@@ -1,5 +1,17 @@
 const { default: mongoose } = require("mongoose");
 const Tables = require("../models/tables");
+const User = require("../models/user");
+
+const formatDateOnly = (inputDate) => {
+  const d = new Date(inputDate);
+
+  if (isNaN(d.getTime())) return null;
+
+  // Convert to YYYY-MM-DD (no timezone issue)
+  return new Date(
+    Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
+  );
+};
 
 exports.addBooking = async (req, res) => {
   try {
@@ -50,7 +62,96 @@ exports.addBooking = async (req, res) => {
       user: req.user._id,
       customerName: req.user.name,
       customerPhone: String(req.user.phone),
-      date: new Date(date),
+      date: formatDateOnly(date),
+      timeSlot: timeSlot,
+      guests: Number(guests),
+      status: "Booked",
+      notes: notes || "",
+    };
+
+    const updatedTable = await Tables.findByIdAndUpdate(
+      tableId,
+      {
+        $push: { bookings: newBooking },
+        $set: { status: "Reserved" },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Booking added successfully",
+      data: updatedTable,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.addBookingByAdmin = async (req, res) => {
+  try {
+    const { tableId } = req.params;
+    const { userId, date, timeSlot, guests, notes } = req.body;
+
+    if (!date || !timeSlot || !guests) {
+      return res.status(400).json({
+        success: false,
+        message: "Date, time slot and guests are required",
+      });
+    }
+
+    if (!req.admin || !req.admin._id) {
+      return res.status(401).json({
+        success: false,
+        message: "User not authenticated",
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        response: "User not found",
+      });
+    }
+
+    const table = await Tables.findById(tableId);
+    if (!table) {
+      return res.status(404).json({
+        success: false,
+        message: "Table not found",
+      });
+    }
+
+    const selectedDate = new Date(date).toISOString().split("T")[0];
+    const alreadyBooked = table.bookings.find((booking) => {
+      const bookingDate = new Date(booking.date).toISOString().split("T")[0];
+
+      return (
+        bookingDate === selectedDate &&
+        booking.timeSlot === timeSlot &&
+        booking.status !== "Cancelled"
+      );
+    });
+
+    if (alreadyBooked) {
+      return res.status(400).json({
+        success: false,
+        message: "This table is already booked for the selected date and time.",
+      });
+    }
+
+    const newBooking = {
+      user: user._id,
+      customerName: user.name,
+      customerPhone: String(user.phone),
+      date: formatDateOnly(date),
       timeSlot: timeSlot,
       guests: Number(guests),
       status: "Booked",

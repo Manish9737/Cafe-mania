@@ -1,7 +1,6 @@
 const Settings = require("../models/settings");
 
 
-// ================= CREATE OR UPDATE SETTINGS =================
 exports.upsertSettings = async (req, res) => {
   try {
     const data = req.body;
@@ -9,7 +8,6 @@ exports.upsertSettings = async (req, res) => {
     let settings = await Settings.findOne();
 
     if (settings) {
-      // Update existing
       settings = await Settings.findByIdAndUpdate(
         settings._id,
         data,
@@ -23,7 +21,6 @@ exports.upsertSettings = async (req, res) => {
       });
     }
 
-    // Create new
     settings = await Settings.create(data);
 
     res.status(201).json({
@@ -41,8 +38,6 @@ exports.upsertSettings = async (req, res) => {
   }
 };
 
-
-// ================= GET SETTINGS (PUBLIC) =================
 exports.getSettings = async (req, res) => {
   try {
     const settings = await Settings.findOne();
